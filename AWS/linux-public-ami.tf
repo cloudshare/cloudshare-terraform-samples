@@ -6,7 +6,7 @@ data "aws_ami" "ubuntu" {
   most_recent = true
   filter {
     name   = "name"
-    values = ["ubuntu/images/hvm-ssd/ubuntu-trusty-14.04-amd64-server-*"]
+    values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
   }
   filter {
     name   = "virtualization-type"
@@ -19,7 +19,7 @@ resource "aws_instance" "web" {
   instance_type = "t2.micro"
   key_name      = "cs-key"
   tags = {
-    Name = "Ubuntu 14.04"
+    Name = "Ubuntu 20.04"
     ci-key-username = "ubuntu"
   }
 }
