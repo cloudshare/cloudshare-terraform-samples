@@ -12,9 +12,4 @@ resource "google_compute_instance" "ubuntu-vm" {
   network_interface {
     network = "default"
   }
-
-  scheduling {
-    preemptible = true
-    automatic_restart = false
-  }
 }
