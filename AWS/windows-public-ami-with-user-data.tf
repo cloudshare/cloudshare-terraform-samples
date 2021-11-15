@@ -1,5 +1,9 @@
 # Change "instance_type" according to your needs
 # The "Name" tag will be the VM name as seen in the CloudShare viewer.
+#
+# For custom Windows AMIs please run the following command on your AMI:
+# C:\ProgramData\Amazon\EC2-Windows\Launch\Scripts\InitializeInstance.ps1 -Schedule
+# see https://docs.aws.amazon.com/AWSEC2/latest/WindowsGuide/ec2-windows-user-data.html
 
 data "aws_ami" "Windows_2019" {
     filter {
