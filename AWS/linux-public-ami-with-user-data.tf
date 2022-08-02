@@ -8,11 +8,11 @@ resource "aws_instance" "web" {
   key_name      = "cs-key"
 
   user_data = <<EOF
-    #! /bin/bash
-    sudo yum install -y httpd
-    sudo systemctl start httpd
-    sudo systemctl enable httpd
-    sudo echo "<h1>Deployed via Terraform</h1>" | sudo tee /var/www/html/index.html
+#!/bin/bash
+sudo yum install -y httpd
+sudo systemctl start httpd
+sudo systemctl enable httpd
+sudo echo "<h1>Deployed via Terraform</h1>" | sudo tee /var/www/html/index.html
   EOF
 
   tags = {
