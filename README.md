@@ -7,6 +7,8 @@
 0.13 <br>
 0.14 <br>
 1.1.4 <br>
+1.2.9 <br>
+1.3.2 <br>
  <br>
 ## Cloud Provider Terraform  Versions
 AWS <br>
