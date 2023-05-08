@@ -1,7 +1,12 @@
 # Edit the following parameters:
-#  time_period section - update start_date to the current month, end_date to next month.
 #  email_reciever
 #  contact_emails
+#
+# start_date will generate the first day of the current month, and end_date will generate the first day of the next month
+# To manually set the dates, use the following date format:
+# "YYYY-MM-01T00:00:00Z"
+# Azure requires the start_date to be the first day of the month
+# https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/consumption_budget_resource_group
 #
 # This example will alert when 80% of the 5% usage is met by sending an email.
 
@@ -25,8 +30,8 @@ resource "azurerm_consumption_budget_resource_group" "Monthly_budget" {
   time_grain = "Monthly"
 
   time_period {
-    start_date = "2023-04-01T00:00:00Z"
-    end_date   = "2023-05-01T00:00:00Z"
+    start_date = formatdate("YYYY-MM-01'T00:00:00Z'",timestamp())
+    end_date = formatdate("YYYY-MM-01'T00:00:00Z'",timeadd(formatdate("YYYY-MM-01'T00:00:00Z'",timestamp()),"744h"))
   }
   
   notification {
