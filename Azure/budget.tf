@@ -30,8 +30,11 @@ resource "azurerm_consumption_budget_resource_group" "Monthly_budget" {
   time_grain = "Monthly"
 
   time_period {
-    start_date = formatdate("YYYY-MM-01'T00:00:00Z'",timestamp())
-    end_date = formatdate("YYYY-MM-01'T00:00:00Z'",timeadd(formatdate("YYYY-MM-01'T00:00:00Z'",timestamp()),"744h"))
+	  start_date = formatdate("YYYY-MM-01'T00:00:00Z'",timestamp())
+	  # 31 days from today 
+	  end_date = formatdate("YYYY-MM-DD'T00:00:00Z'",timeadd(timestamp(),"744h"))
+	  # Beginning of next month if preferred
+	  #end_date = formatdate("YYYY-MM-01'T00:00:00Z'",timeadd(formatdate("YYYY-MM-01'T00:00:00Z'",timestamp()),"744h"))
   }
   
   notification {
