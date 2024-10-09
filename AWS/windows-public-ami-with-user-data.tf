@@ -26,6 +26,7 @@ resource "aws_instance" "win-example" {
     Name = "Windows_Server"
   }
   user_data = <<EOF
+<persist>true</persist>
 <powershell>
 New-Item -Path "C:\" -Name "OutputDir" -ItemType "directory"
 New-Item -Path "C:\OutputDir" -Name "test.txt" -ItemType "file" -Value "This is a text string."
