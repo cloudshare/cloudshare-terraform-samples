@@ -2,21 +2,33 @@
 # Change "ci-key-username" to your AMI username
 # The "Name" tag will be the VM name as seen in the CloudShare viewer.
 
+data "aws_ami" "ubuntu" {
+  most_recent = true
+  filter {
+    name   = "name"
+    values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
+  }
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+  owners = ["099720109477"] # Canonical
+}
+
 resource "aws_instance" "web" {
-  ami           = "ami-0c2b8ca1dad447f8a" #Amazon Linux 2 AMI
+  ami           = "${data.aws_ami.ubuntu.id}"
   instance_type = "t2.micro"
   key_name      = "cs-key"
+  tags = {
+    Name = "Ubuntu 20.04"
+    ci-key-username = "ubuntu"
+  }
 
   user_data = <<EOF
 #!/bin/bash
-sudo yum install -y httpd
-sudo systemctl start httpd
-sudo systemctl enable httpd
+sudo apt-get install -y apache2
+sudo systemctl start apache2
+sudo systemctl enable apache2
 sudo echo "<h1>Deployed via Terraform</h1>" | sudo tee /var/www/html/index.html
-  EOF
-
-  tags = {
-    Name = "Amazon-Linux-2"
-    ci-key-username = "ec2-user"
-  }
+EOF
 }
