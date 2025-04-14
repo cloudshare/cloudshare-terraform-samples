@@ -24,8 +24,7 @@ Version 6.25.0 for Terraform version 1.4.7 <br>
  <br>
 Azure <br>
 Version 1.32.0 for Terraform version 0.13 <br>
-Version 2.99.0 for Terraform version 0.14 <br>
-Version 2.99.0 for Terraform version 1.1.4 <br>
+Version 2.99.0 for Terraform versions 0.14 - 1.1.4 <br>
 Version 3.117.1.0 for Terraform versions 1.2.9 - 1.3.2 <br>
 Version 4.23.0 for Terraform version 1.4.7 <br>
  <br>
