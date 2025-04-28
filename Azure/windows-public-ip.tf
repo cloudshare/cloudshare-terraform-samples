@@ -1,3 +1,4 @@
+# Syntax for Terraform version 1.4.7
 # Change vm_size to your needs
 
 variable "prefix" {
@@ -5,15 +6,11 @@ variable "prefix" {
 }
 
 resource "azurerm_public_ip" "publicip" {  
-  name                         = "windows-2016"  
+  name                         = "windows-2022"  
   location                     = "${data.azurerm_resource_group.main.location}"  
   resource_group_name          = "${data.azurerm_resource_group.main.name}"  
-  public_ip_address_allocation = "Dynamic"  
+  allocation_method            = "Static"  
   idle_timeout_in_minutes      = 30  
-  
-  tags {  
-    environment = "test"  
-  }  
 }  
   
 resource "azurerm_virtual_network" "vnet" {   
@@ -30,7 +27,7 @@ resource "azurerm_network_security_group" "nsg" {
 
   
     security_rule {   
-    name                       = "allout"  
+    name                       = "Allow-All-Out"  
     priority                   = 100  
     direction                  = "Outbound"  
     access                     = "Allow"  
@@ -42,7 +39,7 @@ resource "azurerm_network_security_group" "nsg" {
   }  
   
   security_rule {   
-    name                       = "allin"  
+    name                       = "Allow-All-In"  
     priority                   = 110  
     direction                  = "Inbound"  
     access                     = "Allow"  
@@ -52,28 +49,29 @@ resource "azurerm_network_security_group" "nsg" {
     source_address_prefix      = "*"  
     destination_address_prefix = "*"  
   } 
-  tags {  
-    environment = "test"  
-  }  
 }  
+
+resource "azurerm_network_interface_security_group_association" "nsg_assoc" {
+  network_interface_id      = "${azurerm_network_interface.main.id}"
+  network_security_group_id = "${azurerm_network_security_group.nsg.id}"
+}
   
 resource "azurerm_subnet" "subnet" {  
   name                 = "${var.prefix}-subnet"  
   resource_group_name  = "${data.azurerm_resource_group.main.name}"  
   virtual_network_name = "${azurerm_virtual_network.vnet.name}"  
-  address_prefix       = "10.0.2.0/24"  
+  address_prefixes       = ["10.0.2.0/24"]
 }  
   
-resource "azurerm_network_interface" "winnic" {  
-  name                      = "${var.prefix}-winnic"  
+resource "azurerm_network_interface" "main" {  
+  name                      = "${var.prefix}-main"  
   location                  = "${data.azurerm_resource_group.main.location}"  
   resource_group_name       = "${data.azurerm_resource_group.main.name}"  
-  network_security_group_id = "${azurerm_network_security_group.nsg.id}"  
-  
+
   ip_configuration {  
     name                          = "${var.prefix}-configuration"  
     subnet_id                     = "${azurerm_subnet.subnet.id}"  
-    private_ip_address_allocation = "dynamic"  
+    private_ip_address_allocation = "Dynamic"  
     public_ip_address_id          = "${azurerm_public_ip.publicip.id}"  
   }  
 }  
@@ -88,16 +86,16 @@ resource "azurerm_managed_disk" "datadisk" {
 }  
   
 resource "azurerm_virtual_machine" "windows" {  
-  name                  = "Azure-windows-2012"  
+  name                  = "Windows-2022"  
   location              = "${data.azurerm_resource_group.main.location}"  
   resource_group_name   = "${data.azurerm_resource_group.main.name}"  
-  network_interface_ids = ["${azurerm_network_interface.winnic.id}"]  
-  vm_size               = "Standard_A2"
+  network_interface_ids = ["${azurerm_network_interface.main.id}"]  
+  vm_size               = "Standard_D2ls_v5"
   
   storage_image_reference {  
     publisher = "MicrosoftWindowsServer"  
     offer     = "WindowsServer"  
-    sku       = "2012-R2-Datacenter"  
+    sku       = "2022-datacenter-g2"  
     version   = "latest" 
   }  
   
@@ -126,8 +124,8 @@ resource "azurerm_virtual_machine" "windows" {
     enable_automatic_upgrades = true  
     provision_vm_agent        = true  
   
-    winrm = {  
-      protocol = "http"  
+    winrm {  
+      protocol = "HTTP"  
     }  
   }  
 }
