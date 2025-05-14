@@ -1,3 +1,6 @@
+# Change "instance_type" according to your needs
+# The "Name" tag will be the VM name as seen in the CloudShare viewer.
+
 resource "aws_security_group" "my_sg" {
   name        = "my_sg"
   description = "my_sg_description"
@@ -30,21 +33,22 @@ data "aws_ami" "ubuntu" {
   most_recent = true
   filter {
     name   = "name"
-    values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
+    values = ["ubuntu/images/hvm-ssd-gp3/ubuntu-noble-24.04-amd64-server-*"]
   }
   filter {
     name   = "virtualization-type"
     values = ["hvm"]
   }
-  owners = ["099720109477"] # Canonical
+  owners = ["099720109477"] 
 }
-resource "aws_instance" "web" {
+
+resource "aws_instance" "Ubuntu" {
   ami           = "${data.aws_ami.ubuntu.id}"
   security_groups = ["${aws_security_group.my_sg.name}"]
-  instance_type = "t2.micro"
+  instance_type = "t2.small"
   key_name      = "cs-key"
   tags = {
-    Name = "Ubuntu 20.04"
+    Name = "Ubuntu 24.04"
     ci-key-username = "ubuntu"
   }
 }
