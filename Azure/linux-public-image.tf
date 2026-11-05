@@ -1,4 +1,10 @@
 # Change vm_size to your needs
+#
+# SSH access: CloudShare adds its own admin user to every Linux VM, using the environment's SSH key.
+# Download the key from the environment viewer to connect. The admin_username/admin_password below
+# are only used by Azure to create the VM - CloudShare does not show them in the viewer.
+# To log in with a username and password instead, add the tags csUsername and csPassword to the VM.
+# For a VM without password authentication, see linux-public-image-ssh-key.tf.
 
 variable "prefix" {
   default = "cloudshare"
